@@ -32,6 +32,9 @@ public class Lexer {
 		REC_GREATER_EQUAL,
 		REC_DIFFERENT,
 		
+		REC_OPEN_PARENTHESIS,
+		REC_CLOSE_PARENTHESIS,
+		
 		REC_SEMICOLON,
 		REC_SECTION_SEPARATOR,
 		
@@ -58,6 +61,10 @@ public class Lexer {
 	
 	private State _curr_state;
 	
+//#Accessors
+	public int getCurrRow () { return _curr_row; }
+	public int getCurrColumn () { return _curr_column; }
+	
 //#Constructors
 	
 	public Lexer (Reader input) throws IOException{
@@ -76,100 +83,108 @@ public class Lexer {
 	 */
 	public LexicalUnit nextToken () throws IOException{
 		LexicalUnit result = null;
-		boolean done = false;
+		boolean success = true;
 		_curr_state = State.START;
 		_start_row = _curr_row;
 		_start_column = _curr_column;
 		_lex.delete(0, _lex.length());
-		while (!done) {
+		while (success) {
 			if (_curr_state == State.START) {
-				done = transitionStart();				
+				success = transitionStart();				
 			}
 			else if (_curr_state == State.REC_INTEGER) {
-				if (! (done = transitionRecInt()))
+				if (! (success = transitionRecInt()))
 					result = new LexicalUnit(LexicalClass.LITERAL_NUMBER, _lex.toString(), _start_row, _start_column);
 			}
 			else if (_curr_state == State.REC_ADD) {
-				if (! (done = transitionRecAdd()))
+				if (! (success = transitionRecAdd()))
 					result = new LexicalUnit(LexicalClass.OP_ADD, _start_row, _start_column);
 			}
 			else if (_curr_state == State.REC_SUB) {
-				if (! (done = transitionRecSub()))
+				if (! (success = transitionRecSub()))
 					result = new LexicalUnit(LexicalClass.OP_SUB, _start_row, _start_column);
 			}
 			else if (_curr_state == State.DECIMAL_DOT) {
-				done = transitionDecDot();
+				success = transitionDecDot();
 			}
 			else if (_curr_state == State.REC_DECIMAL) {
-				if (! (done = transitionRecDec()))
+				if (! (success = transitionRecDec()))
 					result = new LexicalUnit(LexicalClass.LITERAL_NUMBER, _lex.toString(), _start_row, _start_column);
 			}
 			else if (_curr_state == State.EXPONENTIAL) {
-				done = transitionExp();
+				success = transitionExp();
 			}
 			else if (_curr_state == State.EXPONENTIAL_SIGNED) {
-				done = transitionSigExp ();
+				success = transitionSigExp ();
 			}
 			else if (_curr_state == State.REC_EXPONENTIAL) {
-				if (! (done = transitionRecExp()))
+				if (! (success = transitionRecExp()))
 					result = new LexicalUnit(LexicalClass.LITERAL_NUMBER, _lex.toString(), _start_row, _start_column);
 			}
 			else if (_curr_state == State.REC_IDENTIFIER) {
-				if (! (done = transitionRecId()))
+				if (! (success = transitionRecId()))
 					result = getIdUnit();
 			}
 			else if (_curr_state == State.SECTION_SEPARATOR) {
-				done = transitionSecSep();
+				success = transitionSecSep();
 			}
 			else if (_curr_state == State.REC_SECTION_SEPARATOR) {
-				done = true;
+				success = false;
 				result = new LexicalUnit(LexicalClass.SECTION_SEPARATOR, _start_row, _start_column);
 			}
 			else if (_curr_state == State.REC_SEMICOLON) {
-				done = true;
+				success = false;
 				result = new LexicalUnit(LexicalClass.SEMICOLON, _start_row, _start_column);
 			}
 			else if (_curr_state == State.DIFFERENT) {
-				done = transitionDiff();
+				success = transitionDiff();
 			}
 			else if (_curr_state == State.REC_DIFFERENT) {
-				done = true;
+				success = false;
 				result = new LexicalUnit(LexicalClass.OP_DIFFERENT, _start_row, _start_column);
 			}
 			else if (_curr_state == State.REC_GREATER) {
-				if (! (done = transitionRecG()))
+				if (! (success = transitionRecG()))
 					result = new LexicalUnit(LexicalClass.OP_GREATER, _start_row, _start_column);
 			}
 			else if (_curr_state == State.REC_GREATER_EQUAL) {
-				done = true;
+				success = false;
 				result = new LexicalUnit(LexicalClass.OP_GRETER_EQUAL, _start_row, _start_column);
 			}
 			else if (_curr_state == State.REC_LESSER) {
-				if (! (done = transitionRecL()))
+				if (! (success = transitionRecL()))
 					result = new LexicalUnit(LexicalClass.OP_LESSER, _start_row, _start_column);
 			}
 			else if (_curr_state == State.REC_LESSER_EQUAL) {
-				done = true;
+				success = false;
 				result = new LexicalUnit(LexicalClass.OP_LESSER_EQUAL, _start_row, _start_column);
 			}
 			else if (_curr_state == State.REC_DIV) {
-				done = true;
+				success = false;
 				result = new LexicalUnit(LexicalClass.OP_DIV, _start_row, _start_column);
 			}
 			else if (_curr_state == State.REC_MUL) {
-				done = true;
+				success = false;
 				result = new LexicalUnit(LexicalClass.OP_MUL, _start_row, _start_column);
 			}
 			else if (_curr_state == State.REC_ASSINGMENT) {
-				if (! (done = transitionRecAss()))
+				if (! (success = transitionRecAss()))
 					result = new LexicalUnit(LexicalClass.ASSIGNEMENT, _start_row, _start_column);
 			}
 			else if (_curr_state == State.REC_EQUALS) {
-				done = true;
+				success = false;
 				result = new LexicalUnit(LexicalClass.OP_EQUALS, _start_row, _start_column);
 			}
+			else if (_curr_state == State.REC_OPEN_PARENTHESIS) {
+				success = false;
+				result = new LexicalUnit(LexicalClass.OPEN_PARENTHESIS, _start_row, _start_column);
+			}
+			else if (_curr_state == State.REC_CLOSE_PARENTHESIS) {
+				success = false;
+				result = new LexicalUnit(LexicalClass.CLOSE_PARENTHESIS, _start_row, _start_column);
+			}
 			else if (_curr_state == State.REC_EOF) {
-				done = true;
+				success = false;
 				result = new LexicalUnit(LexicalClass.EOF, _start_row, _start_column);
 			}
 		}		
@@ -207,6 +222,11 @@ public class Lexer {
 			transitionTo(State.REC_ASSINGMENT);
 		else if (isNot(_nextChar))
 			transitionTo(State.DIFFERENT);
+		
+		else if (isOpPar(_nextChar))
+			transitionTo(State.REC_OPEN_PARENTHESIS);
+		else if (isClPar(_nextChar))
+			transitionTo(State.REC_CLOSE_PARENTHESIS);
 		
 		else if (isUppersAnd(_nextChar))
 			transitionTo(State.SECTION_SEPARATOR);		
@@ -400,8 +420,14 @@ public class Lexer {
 			result = new LexicalUnit(LexicalClass.VALUE_TRUE, _start_row, _start_column);
 		else if (_lex.toString().equals("false"))
 			result = new LexicalUnit(LexicalClass.VALUE_FALSE, _start_row, _start_column);
+		else if (_lex.toString().equals("and"))
+			result = new LexicalUnit(LexicalClass.OP_AND, _start_row, _start_column);
+		else if (_lex.toString().equals("or"))
+			result = new LexicalUnit(LexicalClass.OP_OR, _start_row, _start_column);
+		else if (_lex.toString().equals("not"))
+			result = new LexicalUnit(LexicalClass.OP_NOT, _start_row, _start_column);
 		else
-			result = new LexicalUnit(LexicalClass.IDENTIFIER, _start_row, _start_column);
+			result = new LexicalUnit(LexicalClass.IDENTIFIER, _lex.toString(), _start_row, _start_column);
 		return result;
 	}
 	
@@ -451,14 +477,14 @@ public class Lexer {
 	private static boolean isSemicolon (int c)		{ return c == ';'; }
 	
 	private static boolean isLetter (int c) 		{ return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z'; }
-	private static boolean isDigit (int c) 		{ return c >= '0' && c <= '9'; }
+	private static boolean isDigit (int c) 			{ return c >= '0' && c <= '9'; }
 	private static boolean isUnderScore (int c) 	{ return c == '_'; }
 	
 	private static boolean isDecDot (int c) 		{ return c == '.'; }
 	private static boolean isExponential (int c) 	{ return c == 'e' || c == 'E'; }
 	
 	private static boolean isPlus (int c) 			{ return c == '+'; }
-	private static boolean isMinus (int c) 		{ return c == '-'; }
+	private static boolean isMinus (int c) 			{ return c == '-'; }
 	private static boolean isMul (int c) 			{ return c == '*'; }
 	private static boolean isDiv (int c) 			{ return c == '/'; }
 	
@@ -467,8 +493,11 @@ public class Lexer {
 	private static boolean isMore (int c)			{ return c == '>'; }
 	private static boolean isNot (int c)			{ return c == '!'; }
 	
+	private static boolean isOpPar (int c)			{ return c == '('; }
+	private static boolean isClPar (int c)			{ return c == ')'; }
+	
 	private static boolean isNewLine (int c)		{ return NEW_LINE.indexOf(c) != -1;}
-	private static boolean isWhiteSpace (int c)	{ return c == ' ' || c == '\t' || isNewLine(c); }
+	private static boolean isWhiteSpace (int c)		{ return c == ' ' || c == '\t' || isNewLine(c); }
 	private static boolean isEOF (int c) 			{return c == -1; }
 	
 	

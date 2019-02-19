@@ -31,4 +31,12 @@ public class LexicalUnit {
 		_column = column;		
 	}
 	
+	
+	@Override
+	public String toString() {
+		String lexeme = "";
+		if (_lexeme != null)
+			lexeme = " (" + _lexeme + ")";
+		return _lex_class.toString() + lexeme + " @" +_row + ":" + _column;
+	}
 }
