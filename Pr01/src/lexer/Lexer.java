@@ -52,7 +52,7 @@ public class Lexer {
 	private Reader _input;
 	
 	private StringBuffer _lex;
-	private int _nextChar;
+	private int _next_char;
 	
 	private int _start_row;
 	private int _start_column;
@@ -70,7 +70,7 @@ public class Lexer {
 	public Lexer (Reader input) throws IOException{
 		_input = input;
 		_lex = new StringBuffer ();
-		_nextChar = input.read();
+		_next_char = input.read();
 		_curr_row = 1;
 		_curr_column = 1;
 	}
@@ -200,43 +200,43 @@ public class Lexer {
 		boolean success = true;
 		
 		
-		if (isDigit(_nextChar))
+		if (isDigit(_next_char))
 			transitionTo(State.REC_INTEGER);			
-		else if (isLetter(_nextChar))
+		else if (isLetter(_next_char))
 			transitionTo(State.REC_IDENTIFIER);
 		
-		else if (isPlus(_nextChar))
+		else if (isPlus(_next_char))
 			transitionTo(State.REC_ADD);		
-		else if (isMinus(_nextChar))
+		else if (isMinus(_next_char))
 			transitionTo(State.REC_SUB);
-		else if (isMul(_nextChar))
+		else if (isMul(_next_char))
 			transitionTo(State.REC_MUL);
-		else if (isDiv(_nextChar))
+		else if (isDiv(_next_char))
 			transitionTo(State.REC_DIV);
 		
-		else if (isLess(_nextChar))
+		else if (isLess(_next_char))
 			transitionTo(State.REC_LESSER);		
-		else if (isMore(_nextChar))
+		else if (isMore(_next_char))
 			transitionTo(State.REC_GREATER);
-		else if (isEqu(_nextChar))
+		else if (isEqu(_next_char))
 			transitionTo(State.REC_ASSINGMENT);
-		else if (isNot(_nextChar))
+		else if (isNot(_next_char))
 			transitionTo(State.DIFFERENT);
 		
-		else if (isOpPar(_nextChar))
+		else if (isOpPar(_next_char))
 			transitionTo(State.REC_OPEN_PARENTHESIS);
-		else if (isClPar(_nextChar))
+		else if (isClPar(_next_char))
 			transitionTo(State.REC_CLOSE_PARENTHESIS);
 		
-		else if (isUppersAnd(_nextChar))
+		else if (isUppersAnd(_next_char))
 			transitionTo(State.SECTION_SEPARATOR);		
-		else if (isSemicolon(_nextChar))
+		else if (isSemicolon(_next_char))
 			transitionTo(State.REC_SEMICOLON);
 		
-		else if (isWhiteSpace(_nextChar))
+		else if (isWhiteSpace(_next_char))
 			transitionIgnoringTo(State.START);
 		
-		else if (isEOF(_nextChar))
+		else if (isEOF(_next_char))
 			transitionTo(State.REC_EOF);
 		else
 			success = false;
@@ -247,11 +247,11 @@ public class Lexer {
 	private boolean transitionRecInt () throws IOException {
 		boolean success = true;
 		
-		if (isDigit(_nextChar))
+		if (isDigit(_next_char))
 			transitionTo(State.REC_INTEGER);
-		else if (isDecDot(_nextChar))
+		else if (isDecDot(_next_char))
 			transitionTo(State.DECIMAL_DOT);
-		else if (isExponential(_nextChar))
+		else if (isExponential(_next_char))
 			transitionTo(State.EXPONENTIAL);
 		else
 			success = false;		
@@ -262,7 +262,7 @@ public class Lexer {
 	private boolean transitionRecAdd () throws IOException {
 		boolean success = true;
 		
-		if (isDigit(_nextChar))
+		if (isDigit(_next_char))
 			transitionTo(State.REC_INTEGER);
 		else
 			success = false;
@@ -273,7 +273,7 @@ public class Lexer {
 	private boolean transitionRecSub () throws IOException {
 		boolean success = true;
 		
-		if (isDigit(_nextChar))
+		if (isDigit(_next_char))
 			transitionTo(State.REC_INTEGER);
 		else
 			success = false;
@@ -284,7 +284,7 @@ public class Lexer {
 	private boolean transitionDecDot () throws IOException {
 		boolean success = true;
 		
-		if (isDigit(_nextChar))
+		if (isDigit(_next_char))
 			transitionTo(State.REC_DECIMAL);
 		else
 			success = false;
@@ -295,9 +295,9 @@ public class Lexer {
 	private boolean transitionRecDec () throws IOException {
 		boolean success = true;
 		
-		if (isDigit(_nextChar))
+		if (isDigit(_next_char))
 			transitionTo(State.REC_DECIMAL);
-		else if (isExponential(_nextChar))
+		else if (isExponential(_next_char))
 			transitionTo(State.EXPONENTIAL);
 		else
 			success = false;		
@@ -308,9 +308,9 @@ public class Lexer {
 	private boolean transitionExp () throws IOException {
 		boolean success = true;
 		
-		if (isDigit(_nextChar))
+		if (isDigit(_next_char))
 			transitionTo(State.REC_EXPONENTIAL);
-		else if (isPlus(_nextChar) || isMinus(_nextChar))
+		else if (isPlus(_next_char) || isMinus(_next_char))
 			transitionTo(State.EXPONENTIAL_SIGNED);
 		else
 			success = false;
@@ -321,7 +321,7 @@ public class Lexer {
 	private boolean transitionSigExp () throws IOException {
 		boolean success = true;
 		
-		if (isDigit(_nextChar))
+		if (isDigit(_next_char))
 			transitionTo(State.REC_EXPONENTIAL);
 		else
 			success = false;
@@ -332,7 +332,7 @@ public class Lexer {
 	private boolean transitionRecExp () throws IOException {
 		boolean success = true;
 		
-		if (isDigit(_nextChar))
+		if (isDigit(_next_char))
 			transitionTo(State.REC_EXPONENTIAL);
 		else
 			success = false;
@@ -343,7 +343,7 @@ public class Lexer {
 	private boolean transitionRecId () throws IOException {
 		boolean success = true;
 		
-		if (isDigit(_nextChar) || isLetter(_nextChar) || isUnderScore(_nextChar))
+		if (isDigit(_next_char) || isLetter(_next_char) || isUnderScore(_next_char))
 			transitionTo(State.REC_IDENTIFIER);
 		else
 			success = false;
@@ -354,7 +354,7 @@ public class Lexer {
 	private boolean transitionSecSep () throws IOException {
 		boolean success = true;
 		
-		if (isUppersAnd(_nextChar))
+		if (isUppersAnd(_next_char))
 			transitionTo(State.REC_SECTION_SEPARATOR);
 		else
 			success = false;
@@ -365,7 +365,7 @@ public class Lexer {
 	private boolean transitionDiff () throws IOException {
 		boolean success = true;
 		
-		if (isEqu(_nextChar))
+		if (isEqu(_next_char))
 			transitionTo(State.REC_DIFFERENT);
 		else
 			success = false;
@@ -376,7 +376,7 @@ public class Lexer {
 	private boolean transitionRecG () throws IOException {
 		boolean success = true;
 		
-		if (isEqu(_nextChar))
+		if (isEqu(_next_char))
 			transitionTo(State.REC_GREATER_EQUAL);
 		else
 			success = false;
@@ -387,7 +387,7 @@ public class Lexer {
 	private boolean transitionRecL () throws IOException {
 		boolean success = true;
 		
-		if (isEqu(_nextChar))
+		if (isEqu(_next_char))
 			transitionTo(State.REC_LESSER_EQUAL);
 		else
 			success = false;
@@ -398,7 +398,7 @@ public class Lexer {
 	private boolean transitionRecAss () throws IOException {
 		boolean success = true;
 		
-		if (isEqu(_nextChar))
+		if (isEqu(_next_char))
 			transitionTo(State.REC_EQUALS);
 		else
 			success = false;
@@ -435,13 +435,13 @@ public class Lexer {
 	
 	//#Transition functions between states	
 	public void transitionTo (State next_state) throws IOException {
-		_lex.append((char)_nextChar);
+		_lex.append((char)_next_char);
 		readNextChar();
 		_curr_state = next_state;
 	}
 	public void transitionIgnoringTo (State next_state) throws IOException {
-		_nextChar = _input.read();
-		if (NEW_LINE.indexOf(_nextChar) != -1) {	//If next char is a character from line separator
+		_next_char = _input.read();
+		if (NEW_LINE.indexOf(_next_char) != -1) {	//If next char is a character from line separator
 		    skipEndLine();
 			_curr_row++;
 			_curr_column = 0;
@@ -452,7 +452,7 @@ public class Lexer {
 			
 	}
 	private void readNextChar () throws IOException {
-		_nextChar = _input.read();
+		_next_char = _input.read();
 		/*if (NEW_LINE.indexOf(_nextChar) != -1) {//If next char is a character from line separator
 		    skipEndLine();
 			_curr_row++;
@@ -461,9 +461,9 @@ public class Lexer {
 		else {
 			_curr_column++;
 		}*/
-		if(_nextChar == NEW_LINE.charAt(0))
+		if(_next_char == NEW_LINE.charAt(0))
 		    skipEndLine();
-		if(_nextChar == '\n'){
+		if(_next_char == NEW_LINE.charAt(0)){
 		    _curr_row++;
 		    _curr_column = 0;
         }
