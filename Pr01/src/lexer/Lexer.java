@@ -463,7 +463,7 @@ public class Lexer {
 		}*/
 		if(_next_char == NEW_LINE.charAt(0))
 		    skipEndLine();
-		if(_next_char == NEW_LINE.charAt(0)){
+		if(_next_char == '\n'){
 		    _curr_row++;
 		    _curr_column = 0;
         }
