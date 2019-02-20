@@ -442,7 +442,7 @@ public class Lexer {
 	public void transitionIgnoringTo (State next_state) throws IOException {
 		_nextChar = _input.read();
 		if (NEW_LINE.indexOf(_nextChar) != -1) {	//If next char is a character from line separator
-			skipEndLine();
+		    skipEndLine();
 			_curr_row++;
 			_curr_column = 0;
 		}
@@ -453,14 +453,22 @@ public class Lexer {
 	}
 	private void readNextChar () throws IOException {
 		_nextChar = _input.read();
-		if (NEW_LINE.indexOf(_nextChar) != -1) {//If next char is a character from line separator
-			skipEndLine();
+		/*if (NEW_LINE.indexOf(_nextChar) != -1) {//If next char is a character from line separator
+		    skipEndLine();
 			_curr_row++;
 			_curr_column = 0;
 		}
 		else {
 			_curr_column++;
-		}
+		}*/
+		if(_nextChar == NEW_LINE.charAt(0))
+		    skipEndLine();
+		if(_nextChar == '\n'){
+		    _curr_row++;
+		    _curr_column = 0;
+        }
+        else
+            _curr_column++;
 		
 	}
 	private void skipEndLine() throws IOException {
@@ -469,7 +477,7 @@ public class Lexer {
 			aux = _input.read();
 			if (aux != NEW_LINE.charAt(i))
 				throw new IOException("Unexpected endline character found at line " + _curr_row);
-		}		
+		}
 	}
 	
 	//#Character recognition functions	
