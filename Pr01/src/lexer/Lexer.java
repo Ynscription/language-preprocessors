@@ -1,12 +1,13 @@
 package lexer;
 
 import java.io.IOException;
-import java.io.Reader;
+import java.io.PushbackReader;
+import java.io.Reader;;
 
 public class Lexer {
 //#Constants
 	
-	private static final String NEW_LINE = System.lineSeparator();
+	private static final String NEW_LINE = "\r\n";
 	
 //#Enums
 	
@@ -49,7 +50,7 @@ public class Lexer {
 	
 //#Attributes
 	
-	private Reader _input;
+	private PushbackReader _input;
 	
 	private StringBuffer _lex;
 	private int _next_char;
@@ -68,7 +69,7 @@ public class Lexer {
 //#Constructors
 	
 	public Lexer (Reader input) throws IOException{
-		_input = input;
+		_input = new PushbackReader(input);
 		_lex = new StringBuffer ();
 		_next_char = input.read();
 		_curr_row = 1;
@@ -448,31 +449,30 @@ public class Lexer {
 	}
 	private void readNextChar () throws IOException {
 		_next_char = _input.read();
-		/*if (NEW_LINE.indexOf(_nextChar) != -1) {//If next char is a character from line separator
+		if (NEW_LINE.indexOf(_next_char) != -1) {//If next char is a character from line separator
 		    skipEndLine();
 			_curr_row++;
 			_curr_column = 0;
 		}
 		else {
 			_curr_column++;
-		}*/
-		if(NEW_LINE.indexOf(_next_char) != -1)
+		}
+		/*if(NEW_LINE.indexOf(_next_char) != -1)
 		    skipEndLine();
 		if(_next_char == '\n'){
 		    _curr_row++;
 		    _curr_column = 0;
         }
         else
-            _curr_column++;
+            _curr_column++;*/
 		
 	}
 	private void skipEndLine() throws IOException {
 		int aux;
-		for (int i = 1; i < NEW_LINE.length(); i++) {
+		do {
 			aux = _input.read();
-			if (aux != NEW_LINE.charAt(i))
-				throw new IOException("Unexpected endline character found at line " + _curr_row);
-		}
+		}while (NEW_LINE.indexOf(aux) != -1);
+		_input.unread(aux);
 		_next_char = '\n';
 	}
 	
@@ -500,7 +500,7 @@ public class Lexer {
 	private static boolean isOpPar (int c)			{ return c == '('; }
 	private static boolean isClPar (int c)			{ return c == ')'; }
 	
-	private static boolean isNewLine (int c)		{ return c == '\n';}
+	//private static boolean isNewLine (int c)		{ return c == '\n';}
 	private static boolean isWhiteSpace (int c)		{ return c == ' ' || c == '\t' || c == '\n'; }
 	private static boolean isEOF (int c) 			{return c == -1; }
 	
