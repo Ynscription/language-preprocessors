@@ -440,15 +440,10 @@ public class Lexer {
 		_curr_state = next_state;
 	}
 	public void transitionIgnoringTo (State next_state) throws IOException {
-		_next_char = _input.read();
-		if (NEW_LINE.indexOf(_next_char) != -1) {	//If next char is a character from line separator
-		    skipEndLine();
-			_curr_row++;
-			_curr_column = 0;
-		}
-		else {
-			_curr_column++;
-		}
+		readNextChar();
+		_start_row = _curr_row;
+		_start_column = _curr_row;
+		_curr_state = next_state;
 			
 	}
 	private void readNextChar () throws IOException {
@@ -461,9 +456,8 @@ public class Lexer {
 		else {
 			_curr_column++;
 		}*/
-		if(_next_char == NEW_LINE.charAt(0))
+		if(_next_char == NEW_LINE.charAt(0)) {
 		    skipEndLine();
-		if(_next_char == '\n'){
 		    _curr_row++;
 		    _curr_column = 0;
         }
@@ -504,7 +498,7 @@ public class Lexer {
 	private static boolean isOpPar (int c)			{ return c == '('; }
 	private static boolean isClPar (int c)			{ return c == ')'; }
 	
-	private static boolean isNewLine (int c)		{ return NEW_LINE.indexOf(c) != -1;}
+	private static boolean isNewLine (int c)		{ return c == NEW_LINE.charAt(0);}
 	private static boolean isWhiteSpace (int c)		{ return c == ' ' || c == '\t' || isNewLine(c); }
 	private static boolean isEOF (int c) 			{return c == -1; }
 	
