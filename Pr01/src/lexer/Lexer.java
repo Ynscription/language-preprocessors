@@ -442,7 +442,7 @@ public class Lexer {
 	public void transitionIgnoringTo (State next_state) throws IOException {
 		readNextChar();
 		_start_row = _curr_row;
-		_start_column = _curr_row;
+		_start_column = _curr_column;
 		_curr_state = next_state;
 			
 	}
@@ -456,8 +456,9 @@ public class Lexer {
 		else {
 			_curr_column++;
 		}*/
-		if(_next_char == NEW_LINE.charAt(0)) {
+		if(NEW_LINE.indexOf(_next_char) != -1)
 		    skipEndLine();
+		if(_next_char == '\n'){
 		    _curr_row++;
 		    _curr_column = 0;
         }
@@ -472,6 +473,7 @@ public class Lexer {
 			if (aux != NEW_LINE.charAt(i))
 				throw new IOException("Unexpected endline character found at line " + _curr_row);
 		}
+		_next_char = '\n';
 	}
 	
 	//#Character recognition functions	
@@ -498,8 +500,8 @@ public class Lexer {
 	private static boolean isOpPar (int c)			{ return c == '('; }
 	private static boolean isClPar (int c)			{ return c == ')'; }
 	
-	private static boolean isNewLine (int c)		{ return c == NEW_LINE.charAt(0);}
-	private static boolean isWhiteSpace (int c)		{ return c == ' ' || c == '\t' || isNewLine(c); }
+	private static boolean isNewLine (int c)		{ return c == '\n';}
+	private static boolean isWhiteSpace (int c)		{ return c == ' ' || c == '\t' || c == '\n'; }
 	private static boolean isEOF (int c) 			{return c == -1; }
 	
 	
