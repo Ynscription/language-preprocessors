@@ -1,0 +1,31 @@
+grammar gramatica
+{
+    analysis LL1;
+    nonterminal Programa, Sec_Declaracion, Sec_Instruccion, Declaracion, Tipo, Instruccion, Exp, Exp0, Exp0p, Op0, Exp1, Exp1p, Exp2, Exp2p, Op2, Exp3, Exp3p, Op3, Exp4, Exp5, Lit, Sec_Declaracion_p, Sec_Instruccion_p;
+    terminal EOF, ID, num, bool, and, or, not, True, False, Numero, dist, igual, menor, menor_igual, mayor, mayor_igual;
+
+    Programa := Sec_Declaracion '&''&' Sec_Instruccion EOF;
+    Sec_Declaracion := Declaracion Sec_Declaracion_p;
+    Sec_Declaracion_p := ';' Sec_Declaracion | ;
+    Declaracion := Tipo ID;
+    Tipo := num;
+    Tipo := bool;
+    Sec_Instruccion := Instruccion Sec_Instruccion_p;
+    Sec_Instruccion_p := ';' Sec_Instruccion | ;
+    Instruccion := ID '=' Exp;
+    Exp := Exp0;
+    Exp0 := Exp1 Exp0p; 
+    Exp0p := Op0 Exp1 Exp0p | ;
+    Op0 := '+' | '-';
+    Exp1 := Exp2 Exp1p;
+    Exp1p := and Exp1 | or Exp2 | ;
+    Exp2 := Exp3 Exp2p;
+    Exp2p := Op2 Exp3 | ;
+    Op2 := dist | igual | menor | menor_igual | mayor | mayor_igual;
+    Exp3 := Exp4 Exp3p;
+    Exp3p := Op3 Exp4 Exp3p | ;
+    Op3 := '*' | '/';
+    Exp4 := '-' Exp4 | not Exp5 | Exp5;
+    Exp5 := Lit | '(' Exp0 ')';
+    Lit := ID | True | False | Numero;
+}
