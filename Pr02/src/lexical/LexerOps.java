@@ -1,139 +1,116 @@
 package lexical;
 
-public class LexerOps {
+import error.ErrorManager;
 
+public class LexerOps {
+	
+	private Lexer lexer;
 	public LexerOps(Lexer lexer) {
-		
+		this.lexer = lexer;
 	}
 
 	public LexicalUnit unitEof() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.EOF, lexer.row());
 	}
 
 	public LexicalUnit unitMas() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.OP_ADD, lexer.row());
 	}
 
 	public LexicalUnit unitNumber() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.LITERAL_NUMBER, lexer.lexeme(), lexer.row());
 	}
 
 	public void error() {
-		// TODO Auto-generated method stub
-		
+		ErrorManager.lexicalError(lexer.row(), lexer.lexeme());
 	}
 
 	public LexicalUnit unitID() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.IDENTIFIER, lexer.lexeme(), lexer.row());
 	}
 
 	public LexicalUnit unitMenos() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.OP_SUB, lexer.row());
 	}
 
 	public LexicalUnit unitAbrePar() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.OPEN_PARENTHESIS, lexer.row());
 	}
 
 	public LexicalUnit unitCierraPar() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.CLOSE_PARENTHESIS, lexer.row());
 	}
 
 	public LexicalUnit unitSepLin() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.SEMICOLON, lexer.row());
 	}
 
 	public LexicalUnit unitAsignacion() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.ASSIGNMENT, lexer.row());
 	}
 
 	public LexicalUnit unitMayor() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.OP_GREATER, lexer.row());
 	}
 
 	public LexicalUnit unitMenor() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.OP_LESSER, lexer.row());
 	}
 
 	public LexicalUnit unitDiv() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.OP_DIV, lexer.row());
 	}
 
 	public LexicalUnit unitPor() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.OP_MUL, lexer.row());
 	}
 
 	public LexicalUnit unitSepSec() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.SECTION_SEPARATOR, lexer.row());
 	}
 
 	public LexicalUnit unitIgual() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.OP_EQUALS, lexer.row());
 	}
 
 	public LexicalUnit unitDistinto() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.OP_DIFFERENT, lexer.row());
 	}
 
 	public LexicalUnit unitMayorIgual() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.OP_GREATER_EQUAL, lexer.row());
 	}
 
 	public LexicalUnit unitMenorIgual() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.OP_LESSER_EQUAL, lexer.row());
 	}
 
 	public LexicalUnit unitOr() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.OP_OR, lexer.row());
 	}
 
 	public LexicalUnit unitNum() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.NUM, lexer.row());
 	}
 
 	public LexicalUnit unitNot() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.OP_NOT, lexer.row());
 	}
 
 	public LexicalUnit unitAnd() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.OP_AND, lexer.row());
 	}
 
 	public LexicalUnit unitBool() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.BOOL, lexer.row());
 	}
 
 	public LexicalUnit unitTrue() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.VALUE_TRUE, lexer.row());
 	}
 
 	public LexicalUnit unitFalse() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LexicalUnit(LexicalClass.VALUE_FALSE, lexer.row());
 	}
 
 }

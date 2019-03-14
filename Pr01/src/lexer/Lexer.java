@@ -150,7 +150,7 @@ public class Lexer {
 			}
 			else if (_curr_state == State.REC_GREATER_EQUAL) {
 				success = false;
-				result = new LexicalUnit(LexicalClass.OP_GRETER_EQUAL, _start_row, _start_column);
+				result = new LexicalUnit(LexicalClass.OP_GREATER_EQUAL, _start_row, _start_column);
 			}
 			else if (_curr_state == State.REC_LESSER) {
 				if (! (success = transitionRecL()))
@@ -170,7 +170,7 @@ public class Lexer {
 			}
 			else if (_curr_state == State.REC_ASSINGMENT) {
 				if (! (success = transitionRecAss()))
-					result = new LexicalUnit(LexicalClass.ASSIGNEMENT, _start_row, _start_column);
+					result = new LexicalUnit(LexicalClass.ASSIGNMENT, _start_row, _start_column);
 			}
 			else if (_curr_state == State.REC_EQUALS) {
 				success = false;

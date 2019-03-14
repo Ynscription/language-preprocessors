@@ -5,7 +5,7 @@ public class LexicalUnit {
 	private LexicalClass _lex_class;
 	private String _lexeme;
 	private int _row;
-	private int _column;
+	private Integer _column;
 	
 	
 	//#Accessors
@@ -17,11 +17,25 @@ public class LexicalUnit {
 	
 	
 	//#Constructors
+	public LexicalUnit (LexicalClass lex_class, int row) {
+		_lex_class = lex_class;
+		_lexeme = null;
+		_row = row;
+		_column = null;		
+	}
+	
 	public LexicalUnit (LexicalClass lex_class, int row, int column) {
 		_lex_class = lex_class;
 		_lexeme = null;
 		_row = row;
 		_column = column;		
+	}
+	
+	public LexicalUnit (LexicalClass lex_class, String lexeme, int row) {
+		_lex_class = lex_class;
+		_lexeme = lexeme;
+		_row = row;
+		_column = null;		
 	}
 	
 	public LexicalUnit (LexicalClass lex_class, String lexeme, int row, int column) {
@@ -37,6 +51,9 @@ public class LexicalUnit {
 		String lexeme = "";
 		if (_lexeme != null)
 			lexeme = " (" + _lexeme + ")";
-		return _lex_class.toString() + lexeme + " @" +_row + ":" + _column;
+		String ret = _lex_class.toString() + lexeme + " @" +_row;
+		if (_column != null)
+			ret += ":" + _column;
+		return ret;
 	}
 }
