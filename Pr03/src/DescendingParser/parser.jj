@@ -1,0 +1,47 @@
+options {
+  STATIC=false;
+}
+PARSER_BEGIN(Parser)
+package DescendingParser;
+
+public class Parser {}
+PARSER_END(Parser)
+  TOKEN:{<num: "num">}
+  TOKEN:{<bool: "bool">}
+  TOKEN:{<#letra: ["a"-"z","A"-"Z"]>}
+  TOKEN:{<#dig: ["0"-"9"]>}
+  TOKEN:{<#p_ent: (["+","-"])? (<dig>)+>}
+  TOKEN:{<#p_dec: "." (<dig>)+>}
+  TOKEN:{<#p_exp: (["e","E"])? <p_ent>>}
+  TOKEN:{<lit_n: <p_ent> (<p_dec> | <p_exp> | <p_dec><p_exp> | "")>}
+  TOKEN:{<or: "or">}
+  TOKEN:{<and: "and">}
+  TOKEN:{<not: "not">}
+  TOKEN:{<v_true: "true">}
+  TOKEN:{<v_false: "false">}
+  TOKEN:{<ID: <letra> (<letra>|<dig>|"_")*>}
+  SKIP:{<["\t", " ", "\r", "\b", "\n"]>}
+
+  void Programa()           : {} {Sec_Declaracion() "&&" Sec_Instruccion()<EOF>}
+  void Sec_Declaracion()    : {} {Declaracion() Sec_Declaracion_p()}
+  void Sec_Declaracion_p()  : {} {";" Sec_Declaracion() | {}}
+  void Declaracion()        : {} {Tipo() <ID>}
+  void Tipo()               : {} {<num> | <bool>}
+  void Sec_Instruccion()    : {} {Instruccion() Sec_Instruccion_p()}
+  void Sec_Instruccion_p()  : {} {";" Sec_Instruccion() | {}}
+  void Instruccion()        : {} {<ID> "=" Exp()}
+  void Exp()                : {} {Exp0()}
+  void Exp0()               : {} {Exp1() Exp0_p()}
+  void Exp0_p()             : {} {Op0() Exp1() Exp0_p() | {}}
+  void Op0()                : {} {"+" | "-"}
+  void Exp1()               : {} {Exp2() Exp1_p()}
+  void Exp1_p()             : {} {<and> Exp1() | <or> Exp2() | {}}
+  void Exp2()               : {} {Exp3() Exp2_p()}
+  void Exp2_p()             : {} {Op2() Exp3() | {}}
+  void Op2()                : {}  {"!=" | "==" | "<"  | "<=" | ">" | ">="}
+  void Exp3()               : {} {Exp4() Exp3_p()}
+  void Exp3_p()             : {} {Op3() Exp4() Exp3_p() | {}}
+  void Op3()                : {} {"*" | "/"}
+  void Exp4()               : {} {"-" Exp4() | <not> Exp5() | Exp5()}
+  void Exp5()               : {} {Lit() | "(" Exp0() ")"}
+  void Lit()                : {} {<ID> | <v_true> | <v_false> | <lit_n>}
