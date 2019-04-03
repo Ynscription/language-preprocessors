@@ -1,0 +1,66 @@
+package ascending.syntactical;
+
+import ascending.lexical.Lexer;
+import ascending.lexical.LexicalClass;
+import ascending.error.ErrorManager;
+
+
+scan with {: Symbol s = getScanner().next_token();
+	  System.out.println(((LexicalUnit)s).toString());
+	  return  s;
+:};
+parser code {:
+	public void syntax_error(Symbol lex_unit) {
+		ErrorManager.syntaxError((LexicalUnit) lex_unit);
+	}
+:};
+
+init with {:
+
+:};
+
+terminal	NUM,
+			BOOL,
+			SEMICOLON,
+			IDENTIFIER,
+			SECTION_SEPARATOR,
+			ASSIGNMENT,
+			OP_ADD,
+			OP_SUB,
+			OP_MUL,
+			OP_DIV,
+			OP_AND,
+			OP_OR,
+			OP_NOT,
+			OP_LESSER,
+			OP_LESSER_EQUAL,
+			OP_GREATER,
+			OP_GREATER_EQUAL,
+			OP_EQUALS,
+			OP_DIFFERENT,
+			OPEN_PARENTHESIS,
+			CLOSE_PARENTHESIS,
+			LITERAL_NUMBER,
+			VALUE_TRUE,
+			VALUE_FALSE;
+
+non terminal 	Programa, Sec_Declaracion, Sec_Instruccion, Declaracion, Tipo, Instruccion,
+				Exp, Exp0, Op0, Exp1, Exp2, Op2, Exp3, Op3, Exp4, Exp5, Lit;
+
+Programa			::= Sec_Declaracion SECTION_SEPARATOR Sec_Instruccion ;
+Sec_Declaracion		::= Declaracion | Declaracion SEMICOLON Sec_Declaracion ;
+Declaracion			::= Tipo IDENTIFIER ;
+Tipo				::= NUM | BOOL ;
+Sec_Instruccion		::= Instruccion | Instruccion SEMICOLON Sec_Instruccion ;
+Instruccion			::= IDENTIFIER ASSIGNMENT Exp ;
+Exp					::= Exp0 ;
+Exp0				::= Exp0 Op0 Exp1 | Exp1;
+Op0					::= OP_ADD | OP_SUB ;
+Exp1				::= Exp2 OP_AND Exp1 | Exp2 OP_OR Exp2 | Exp2 ;
+Exp2				::= Exp3 Op2 Exp3 | Exp3 ;
+Op2					::= OP_DIFFERENT | OP_EQUALS | OP_LESSER | OP_LESSER_EQUAL | OP_GREATER |OP_GREATER_EQUAL ;
+Exp3				::= Exp3 Op3 Exp4 | Exp4 ;
+Op3					::= OP_MUL | OP_DIV ;
+Exp4				::= OP_SUB Exp4 | OP_NOT Exp5 | Exp5 ;
+Exp5				::= Lit | OPEN_PARENTHESIS Exp0 CLOSE_PARENTHESIS ;
+Lit					::= IDENTIFIER | VALUE_TRUE | VALUE_FALSE | LITERAL_NUMBER ;
