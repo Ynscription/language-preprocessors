@@ -397,6 +397,7 @@ public class Parser implements ParserConstants {
     jj_ntk = -1;
     if (token.kind == kind) {
       jj_gen++;
+      System.out.println(token);
       return token;
     }
     token = oldToken;
