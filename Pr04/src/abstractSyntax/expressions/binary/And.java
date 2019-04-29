@@ -9,5 +9,11 @@ public class And extends ExpBinaria {
 		super(opnd1, opnd2);
 		this.tipo = TipoExp.AND;
 	}
+	
+	
+	@Override
+	public String toString() {
+		return "And" + super.toString();
+	}
 
 }

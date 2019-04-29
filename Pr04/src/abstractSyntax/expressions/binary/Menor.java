@@ -9,5 +9,10 @@ public class Menor extends ExpBinaria {
 		super(opnd1, opnd2);
 		this.tipo = TipoExp.MENOR;
 	}
+	
+	@Override
+	public String toString() {
+		return "Menor" + super.toString();
+	}
 
 }

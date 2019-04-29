@@ -3,18 +3,19 @@ package abstractSyntax;
 import abstractSyntax.expressions.Exp;
 
 public class LIComp extends LI {
-	private String id;
-	private Exp exp;
 	private LI resto;
 	
 	public LIComp (String id, Exp exp, LI resto) {
-		this.id = id;
-		this.exp = exp;
+		super(id, exp);
 		this.resto = resto;
-		this.tipo = TipoLIs.SIMP;
+		this.tipo = TipoLIs.COMP;
 	}
 	
-	public String id () {return id;}
-	public Exp exp () {return exp;};
-	public LI resto () {return resto;};
+	public LI resto () {return resto;}
+	
+	
+	@Override
+	public String toString() {
+		return "InstruccionCompuesta{" + id + ", " + exp + ", " + resto + "}";
+	}
 }

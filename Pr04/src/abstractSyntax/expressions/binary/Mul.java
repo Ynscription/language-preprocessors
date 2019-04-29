@@ -9,5 +9,11 @@ public class Mul extends ExpBinaria {
 		super(opnd1, opnd2);
 		this.tipo = TipoExp.MUL;
 	}
+	
+	
+	@Override
+	public String toString() {
+		return "Multiplicacion" + super.toString();
+	}
 
 }

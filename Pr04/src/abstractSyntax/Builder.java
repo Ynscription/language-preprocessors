@@ -5,8 +5,8 @@ import abstractSyntax.expressions.unary.*;
 import abstractSyntax.expressions.binary.*;
 
 public class Builder {
-	public LD ldCompuesta (String id, String tipoVar, LD resto) {return new LDComp(id, tipoVar, resto);}
-	public LD ldSimple (String id, String tipoVar) {return new LDSimp(id, tipoVar);}
+	public LD ldCompuesta (String tipoVar, String id, LD resto) {return new LDComp(tipoVar, id, resto);}
+	public LD ldSimple (String tipoVar, String id) {return new LDSimp(tipoVar, id);}
 	public LI liCompuesta (String id, Exp exp, LI resto) {return new LIComp(id, exp, resto);}
 	public LI liSimple (String id, Exp exp) {return new LISimp(id, exp);}
 	

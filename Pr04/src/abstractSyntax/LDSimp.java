@@ -1,15 +1,15 @@
 package abstractSyntax;
 
 public class LDSimp extends LD {
-	private String id;
-	private String tipoVar;
 	
-	public LDSimp (String id, String tipoVar) {
-		this.id = id;
-		this.tipoVar = tipoVar;
+	public LDSimp (String tipoVar, String id) {
+		super(tipoVar, id);
 		this.tipo = TipoLD.SIMP;
 	}
 	
-	public String id () {return id;}
-	public String tipoVar () {return tipoVar;}
+	
+	@Override
+	public String toString() {
+		return "DeclaracionSimple{" + tipoVar + id + "}";
+	}
 }

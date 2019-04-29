@@ -10,4 +10,10 @@ public class Div extends ExpBinaria{
 		this.tipo = TipoExp.DIV;
 	}
 	
+	
+	@Override
+	public String toString() {
+		return "Division" + super.toString();
+	}
+	
 }

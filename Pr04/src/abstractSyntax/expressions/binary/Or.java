@@ -9,5 +9,11 @@ public class Or extends ExpBinaria {
 		super(opnd1, opnd2);
 		this.tipo = TipoExp.OR;
 	}
+	
+	
+	@Override
+	public String toString() {
+		return "Or" + super.toString();
+	}
 
 }

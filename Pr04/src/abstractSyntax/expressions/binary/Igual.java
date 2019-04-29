@@ -9,5 +9,11 @@ public class Igual extends ExpBinaria {
 		super(opnd1, opnd2);
 		this.tipo = TipoExp.IGUAL;
 	}
+	
+	
+	@Override
+	public String toString() {
+		return "Igual" + super.toString();
+	}
 
 }

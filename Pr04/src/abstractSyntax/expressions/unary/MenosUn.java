@@ -9,5 +9,11 @@ public class MenosUn extends ExpUnaria {
 		super(opnd);
 		this.tipo = TipoExp.MENOS_UN;
 	}	
+	
+	
+	@Override
+	public String toString() {
+		return "MenosUnario{" + opnd + "}";
+	}
 
 }

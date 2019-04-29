@@ -2,9 +2,17 @@ package abstractSyntax;
 
 public abstract class LD {
 	protected TipoLD tipo;
-	public TipoLD tipo () {return tipo;}
+	protected String tipoVar;
+	protected String id;	
+	
+	public LD (String tipoVar, String id) {
+		this.tipoVar = tipoVar;
+		this.id = id;
+	}
 
-	public String id () {throw new UnsupportedOperationException("id");}
-	public String tipoVar () {throw new UnsupportedOperationException("tipoVar");}
+	public TipoLD tipo () {return tipo;}
+	public String id () {return id;}
+	public String tipoVar () {return tipoVar;}
+	
 	public LD resto () {throw new UnsupportedOperationException("resto LD");}
 }

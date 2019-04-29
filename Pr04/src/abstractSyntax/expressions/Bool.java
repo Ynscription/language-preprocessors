@@ -9,4 +9,10 @@ public class Bool extends Exp {
 	}
 	
 	public String boolVal() {return v;}
+	
+	
+	@Override
+	public String toString() {
+		return "Booleano{" + v + "}";
+	}
 }

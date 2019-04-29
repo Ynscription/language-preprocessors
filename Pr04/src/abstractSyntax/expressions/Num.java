@@ -9,4 +9,10 @@ public class Num extends Exp {
 	}
 	
 	public String numVal() {return v;}
+	
+	
+	@Override
+	public String toString() {
+		return "Numero{" + v + "}";
+	}
 }

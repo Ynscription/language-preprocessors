@@ -10,4 +10,10 @@ public class Distinto extends ExpBinaria {
 		this.tipo = TipoExp.DISTINTO;
 	}
 	
+	
+	@Override
+	public String toString() {
+		return "Distinto" + super.toString();
+	}
+	
 }

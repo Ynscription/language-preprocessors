@@ -9,5 +9,10 @@ public class Mayor extends ExpBinaria {
 		super(opnd1, opnd2);
 		this.tipo = TipoExp.MAYOR;
 	}
-
+	
+	
+	@Override
+	public String toString() {
+		return "Mayor" + super.toString();
+	}
 }

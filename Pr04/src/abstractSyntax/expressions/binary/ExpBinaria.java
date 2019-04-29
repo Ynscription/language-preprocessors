@@ -13,4 +13,10 @@ public abstract class ExpBinaria extends Exp {
 	
 	public Exp opnd1() {return opnd1;};
 	public Exp opnd2() {return opnd2;};
+	
+	
+	@Override
+	public String toString() {
+		return "{" + opnd1 + opnd2 + "}";
+	}
 }

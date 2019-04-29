@@ -9,5 +9,11 @@ public class Not extends ExpUnaria {
 		super(opnd);
 		this.tipo = TipoExp.NOT;
 	}
+	
+	
+	@Override
+	public String toString() {
+		return "Not{" + opnd + "}";
+	}
 
 }

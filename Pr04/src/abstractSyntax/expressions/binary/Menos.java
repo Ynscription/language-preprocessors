@@ -9,5 +9,11 @@ public class Menos extends ExpBinaria {
 		super(opnd1, opnd2);
 		this.tipo = TipoExp.MENOS;
 	}
+	
+	
+	@Override
+	public String toString() {
+		return "Menos" + super.toString();
+	}
 
 }

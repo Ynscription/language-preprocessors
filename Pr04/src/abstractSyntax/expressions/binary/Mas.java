@@ -9,5 +9,11 @@ public class Mas extends ExpBinaria {
 		super(opnd1, opnd2);
 		this.tipo = TipoExp.MAS;
 	}
-
+	
+	
+	@Override
+	public String toString() {
+		return "Mas" + super.toString();
+	}
+	
 }

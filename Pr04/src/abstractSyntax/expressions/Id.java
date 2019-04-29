@@ -9,4 +9,10 @@ public class Id extends Exp {
 	}
 	
 	public String id() {return id;}
+	
+	
+	@Override
+	public String toString() {
+		return "Identificador{" + id + "}";
+	}
 }

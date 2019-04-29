@@ -9,5 +9,11 @@ public class MayorIgual extends ExpBinaria {
 		super(opnd1, opnd2);
 		this.tipo = TipoExp.MAYOR_IGUAL;
 	}
+	
+	
+	@Override
+	public String toString() {
+		return "MayorIgual" + super.toString();
+	}
 
 }
