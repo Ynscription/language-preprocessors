@@ -10,6 +10,6 @@ public class LDSimp extends LD {
 	
 	@Override
 	public String toString() {
-		return "DeclaracionSimple{" + tipoVar + id + "}";
+		return "DeclaracionSimple{" + tipoVar + ", " + id + "}";
 	}
 }

@@ -2,5 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="J:/_UNI/2018_2019/PL/Practicas/Pr04/src/ascending/eval/cup.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

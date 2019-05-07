@@ -1,0 +1,177 @@
+package ascending.eval;
+
+import java_cup.runtime.*;
+
+import ascending.lexical.Lexer;
+import ascending.lexical.LexicalClass;
+import ascending.lexical.LexicalUnit;
+
+import abstractSyntax.Builder;
+import abstractSyntax.*;
+import abstractSyntax.expressions.*;
+import abstractSyntax.expressions.binary.*;
+import abstractSyntax.expressions.unary.*;
+
+import ascending.error.ErrorManager;
+
+scan with {: Symbol s = getScanner().next_token();
+	  System.out.println(((LexicalUnit)s).toString());
+	  return  s;
+:};
+
+parser code {:
+	public void syntax_error(Symbol lex_unit) {
+		ErrorManager.syntaxError((LexicalUnit) lex_unit);
+	}
+:};
+
+init with {:
+
+:};
+
+
+terminal	NUM,
+			BOOL,
+			SEMICOLON,
+			SECTION_SEPARATOR,
+			ASSIGNMENT,
+			OPEN_PARENTHESIS,
+			CLOSE_PARENTHESIS;
+
+terminal String IDENTIFIER,
+				LITERAL_NUMBER,
+				BOOLEAN_VALUE;
+
+terminal String	OP_ADD,
+				OP_SUB,
+				OP_MUL,
+				OP_DIV,
+				OP_AND,
+				OP_OR,
+				OP_NOT,
+				OP_LESSER,
+				OP_LESSER_EQUAL,
+				OP_GREATER,
+				OP_GREATER_EQUAL,
+				OP_EQUALS,
+				OP_DIFFERENT;
+
+non terminal Program Prog;
+
+non terminal LD LDs;
+non terminal LI LIs;
+non terminal LDSimp D;
+non terminal LISimp I;
+
+non terminal Exp Exp0,
+				 Exp1,
+				 Exp2,
+				 Exp3,
+				 Exp4,
+				 Exp5;
+
+non terminal String Op0,
+					Op2,
+					Op3;
+
+Prog 	::= LDs: lds SECTION_SEPARATOR LIs: lis
+	{: RESULT = Builder.prog(lds, lis); :};
+
+LDs		::= LDs: lds SEMICOLON D: dec
+	{: RESULT = Builder.ldCompuesta(dec.tipoVar(), dec.id(), lds); :};
+
+LDs		::= D: dec
+	{: RESULT = Builder.ldSimple(dec.tipoVar(), dec.id()); :};
+
+D		::= NUM IDENTIFIER: identificador
+	{: RESULT = new LDSimp("num", identificador); :};
+
+D		::= BOOL IDENTIFIER: identificador
+	{: RESULT = new LDSimp("bool", identificador); :};
+
+LIs		::= LIs: lis SEMICOLON I: inst
+	{: RESULT = Builder.liCompuesta(inst.id(), inst.exp(), lis); :};
+
+LIs		::= I: inst
+	{: RESULT = Builder.liSimple(inst.id(), inst.exp()); :};
+
+I		::= IDENTIFIER: identificador ASSIGNMENT Exp0: exp
+	{: RESULT = new LISimp(identificador, exp); :};
+
+Exp0	::= Exp0: exp0 Op0: op0 Exp1: exp1
+	{: RESULT = Builder.mkexp(op0, exp0, exp1); :};
+
+Exp0	::= Exp1: exp1
+	{: RESULT = exp1; :};
+
+Exp1	::= Exp2: exp2 OP_AND Exp1: exp1
+	{: RESULT = Builder.and(exp2, exp1); :};
+
+Exp1	::= Exp2: exp20 OP_OR Exp2: exp21
+	{: RESULT = Builder.or(exp20, exp21); :};
+
+Exp1	::= Exp2: exp2
+	{: RESULT = exp2; :};
+
+Exp2	::= Exp3: exp30 Op2: op2 Exp3: exp31
+	{: RESULT = Builder.mkexp(op2, exp30, exp31); :};
+
+Exp2	::= Exp3: exp3
+	{: RESULT = exp3; :};
+
+Exp3	::= Exp3: exp3 Op3: op3 Exp4: exp4
+	{: RESULT = Builder.mkexp(op3, exp3, exp4); :};
+
+Exp3	::= Exp4: exp4
+	{: RESULT = exp4; :};
+
+Exp4	::= OP_SUB Exp4: exp4
+	{: RESULT = Builder.menosUn(exp4); :};
+
+Exp4	::= OP_NOT Exp5: exp5
+	{: RESULT = Builder.not(exp5); :};
+
+Exp4	::= Exp5: exp5
+	{: RESULT = exp5; :};
+
+Exp5	::= LITERAL_NUMBER: num
+	{: RESULT = Builder.num(num); :};
+
+Exp5	::= BOOLEAN_VALUE: bool
+	{: RESULT = Builder.bool(bool); :};
+
+Exp5	::= IDENTIFIER: identificador
+	{: RESULT = Builder.id(identificador); :};
+
+Exp5	::= OPEN_PARENTHESIS Exp0: exp0 CLOSE_PARENTHESIS
+	{: RESULT = exp0; :};
+
+Op0		::= OP_ADD: op
+	{: RESULT = op; :};
+
+Op0		::= OP_SUB: op
+	{: RESULT = op; :};
+
+Op2		::= OP_DIFFERENT: op
+	{: RESULT = op; :};
+
+Op2		::= OP_EQUALS: op
+	{: RESULT = op; :};
+
+Op2		::= OP_LESSER: op
+	{: RESULT = op; :};
+
+Op2		::= OP_LESSER_EQUAL: op
+	{: RESULT = op; :};
+
+Op2		::= OP_GREATER: op
+	{: RESULT = op; :};
+
+Op2		::= OP_GREATER_EQUAL: op
+	{: RESULT = op; :};
+
+Op3		::= OP_MUL: op
+	{: RESULT = op; :};
+
+Op3		::= OP_DIV: op
+	{: RESULT = op; :};

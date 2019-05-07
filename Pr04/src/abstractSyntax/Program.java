@@ -14,6 +14,6 @@ public class Program {
 	
 	@Override
 	public String toString() {
-		return "Program{" + decs + insts + "}";
+		return "Program{" + decs + "," + System.lineSeparator() + insts + "}";
 	}
 }
