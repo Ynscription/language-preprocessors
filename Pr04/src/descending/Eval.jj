@@ -1,0 +1,112 @@
+options {
+	STATIC=false;
+}
+PARSER_BEGIN(Eval)
+package descending;
+
+import abstractSyntax.*;
+import abstractSyntax.expressions.*;
+import abstractSyntax.expressions.unary.*;
+import abstractSyntax.expressions.binary.*;
+
+
+public class Eval {}
+PARSER_END(Eval)
+	TOKEN:{<num: "num">}
+	TOKEN:{<bool: "bool">}
+	TOKEN:{<#letra: ["a"-"z","A"-"Z"]>}
+	TOKEN:{<#dig: ["0"-"9"]>}
+	TOKEN:{<#p_ent: (["+","-"])? (<dig>)+>}
+	TOKEN:{<#p_dec: "." (<dig>)+>}
+	TOKEN:{<#p_exp: (["e","E"])? <p_ent>>}
+	TOKEN:{<lit_n: <p_ent> (<p_dec> | <p_exp> | <p_dec><p_exp> | "")>}
+	TOKEN:{<or: "or">}
+	TOKEN:{<and: "and">}
+	TOKEN:{<not: "not">}
+	TOKEN:{<v_boolean: ("true"|"false")>}
+	TOKEN:{<ID: <letra> (<letra>|<dig>|"_")*>}
+	SKIP:{<["\t", " ", "\r", "\b", "\n"]>}
+
+	Program Prog()		: {LD lds; LI lis;}{lds=LDs() "&&" lis=LIs() <EOF>
+					{return Builder.prog(lds, lis);} }
+
+	LD LDs()			: {LDSimp d; LD pdec;}{d=D() pdec=PDec(d)
+					{return pdec;} }
+
+	LD PDec(LD ah0)		: {LDSimp d; LD ah1;}{";" d=D() ah1=PDec(Builder.ldCompuesta(d.tipoVar(), d.id(), ah0))
+					{return ah1;}
+						| {return ah0;} }
+
+	LI LIs()			: {LISimp i; LI pins;}{i=I() pins=PIns(i)
+					{return pins;} }
+
+	LI PIns(LI ah0)		: {LISimp i; LI ah1;}{";" i=I() ah1=PIns(Builder.liCompuesta(i.id(), i.exp(), ah0))
+					{return ah1;}
+						| {return ah0;} }
+
+	LDSimp D()			: {Token tipo, identificador;}{tipo=<num> identificador=<ID>
+					{return (LDSimp) Builder.ldSimple(tipo.image, identificador.image);}
+						| tipo=<bool> identificador=<ID>
+					{return (LDSimp) Builder.ldSimple(tipo.image, identificador.image);} }
+
+	LISimp I()			: {Token identificador; Exp exp0;}{identificador=<ID> "=" exp0=Exp0()
+					{return (LISimp) Builder.liSimple(identificador.image, exp0);} }
+
+	Exp Exp0()			: {Exp exp1, rexp0;}{exp1=Exp1() rexp0=RExp0(exp1)
+					{return rexp0;} }
+
+	Exp RExp0(Exp ah0)	: {String op0; Exp exp1, ah1;}{op0=Op0() exp1=Exp1() ah1=RExp0(Builder.mkexp(op0, ah0, exp1))
+					{return ah1;}
+						| {return ah0;} }
+
+	String Op0()		: {}{"+" {return "+";}
+						| "-" {return "-";} }
+
+	Exp Exp1()			: {Exp exp2, rexp1;}{exp2=Exp2() rexp1=RExp1(exp2)
+					{return rexp1;} }
+
+	Exp RExp1(Exp ah0)	: {Exp expn;}{<and> expn=Exp1()
+					{return Builder.and(ah0, expn);}
+					 	| <or> expn=Exp2()
+					{return Builder.or(ah0, expn);}
+						| {return ah0;} }
+
+	Exp Exp2()			:{Exp exp3, rexp2;}{exp3=Exp3() rexp2=RExp2(exp3)
+					{return rexp2;} }
+
+	Exp RExp2(Exp ah0)	: {String op2; Exp exp3;}{op2=Op2() exp3=Exp3()
+					{return Builder.mkexp(op2, ah0, exp3);}
+						| {return ah0;} }
+
+	String Op2()		: {}{"!=" {return "!=";}
+						| "==" {return "==";}
+						| "<" {return "<";}
+						| "<=" {return "<=";}
+						| ">" {return ">";}
+						| ">=" {return ">=";} }
+
+	Exp Exp3()			: {Exp exp4, rexp3;}{exp4=Exp4() rexp3=RExp3(exp4)
+					{return rexp3;} }
+
+	Exp RExp3(Exp ah0)	: {String op3; Exp exp4, rexp3;}{op3=Op3() exp4=Exp4() rexp3=RExp3(Builder.mkexp(op3, ah0, exp4))
+					{return rexp3;}
+						| {return ah0;} }
+
+	String Op3()		:{}{"*" {return "*";}
+						| "/" {return "/";} }
+
+	Exp Exp4()			: {Exp expn;}{"-" expn=Exp4()
+					{return Builder.menosUn(expn);}
+						| "not" expn=Exp5()
+					{return Builder.not(expn);}
+						| expn=Exp5()
+					{return expn;} }
+
+	Exp Exp5()			: {Exp exp0; Token token;}{token=<lit_n>
+					{return Builder.num(token.image);}
+						| token=<v_boolean>
+					{return Builder.bool(token.image);}
+						| token=<ID>
+					{return Builder.id(token.image);}
+						| "(" exp0=Exp0() ")"
+					{return exp0;} }
