@@ -1,5 +1,6 @@
 package ascending.eval;
 
+import java_cup.sym;
 import java_cup.runtime.*;
 
 import ascending.lexical.Lexer;
